@@ -37,7 +37,9 @@ export const auth = betterAuth({
     autoSignIn: false,
     requireEmailVerification: true,
   },
+
   emailVerification: {
+    sendOnSignUp: true,
     sendVerificationEmail: async ({ user, url, token }) => {
       // Implement your email sending logic here
       console.log(
@@ -134,10 +136,24 @@ export const auth = betterAuth({
   </table>
 
 </body>
-</html>`, // HTML version of the message
+        </html>`,
       });
-
       console.log("Message sent:", info.messageId);
     },
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+
+    /*import { createAuthClient } from "better-auth/client";
+const authClient = createAuthClient();
+
+const signIn = async () => {
+  const data = await authClient.signIn.social({
+    provider: "google",
+  });
+}; */
   },
 });
