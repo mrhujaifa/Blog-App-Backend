@@ -8,13 +8,11 @@ interface CreatePostPayload {
   isFeatured?: boolean;
   status?: PostStatus;
   tags: string[];
-  authorId: string;
 }
 
 //* Create a new post service
-const createPost = async (payload: CreatePostPayload): Promise<Post> => {
-  const { title, content, thumbnail, isFeatured, status, tags, authorId } =
-    payload;
+const createPost = async (payload: CreatePostPayload, authorId: string) => {
+  const { title, content, thumbnail, isFeatured, status, tags } = payload;
 
   const post = await prisma.post.create({
     data: {

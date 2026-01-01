@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { postServices } from "./post.service";
 
-
 //* Create a new post controller
-const createPost = async (req: Request, res: Response): Promise<void> => {
+const createPost = async (req: Request, res: Response) => {
   try {
-    const result = await postServices.createPost(req.body);
+    const user = req.user;
+
+    const result = await postServices.createPost(req.body, user.id);
     res.status(201).json({
       success: true,
       message: "Post created successfully",
@@ -40,5 +41,5 @@ const getPosts = async (req: Request, res: Response): Promise<void> => {
 
 export const postController = {
   createPost,
-  getPosts
+  getPosts,
 };
