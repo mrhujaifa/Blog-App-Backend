@@ -4,7 +4,7 @@ import { verifyAuth } from "../../middlewares/verifyAuth";
 import { requireAuth } from "../../middlewares/Auth";
 const router: Router = express.Router();
 
-router.get("/", verifyAuth("ADMIN"), requireAuth, postController.getPosts);
+router.get("/", verifyAuth("USER"), requireAuth, postController.getPosts);
 
 router.post("/", requireAuth, postController.createPost);
 

@@ -24,7 +24,19 @@ const createPost = async (req: Request, res: Response) => {
 //* Get all posts controller
 const getPosts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await postServices.getPosts();
+    //* extract search query parameter
+    const { search } = req.query;
+    const searchString = typeof search === "string" ? search : undefined;
+
+    //* extract tags query parameter
+    const { tags } = req.query;
+    const tagsArray = typeof tags === "string" ? tags.split(",") : [];
+    const result = await postServices.getPosts({
+      search: searchString,
+      tags: tagsArray,
+    });
+
+    // response
     res.status(200).json({
       success: true,
       message: "Posts retrieved successfully",

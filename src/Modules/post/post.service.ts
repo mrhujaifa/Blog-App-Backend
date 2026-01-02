@@ -1,3 +1,4 @@
+import e from "express";
 import { Post, PostStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
@@ -30,10 +31,55 @@ const createPost = async (payload: CreatePostPayload, authorId: string) => {
   return post;
 };
 
-//* Get all posts Service
-const getPosts = async () => {
-  const posts = await prisma.post.findMany();
-  return posts;
+//* Get all search posts Service
+const getPosts = async (payload: {
+  search?: string | undefined;
+  tags?: string[] | [];
+}) => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        //! why use AND here?
+        //* because we want to apply multiple conditions together.
+        AND: [
+          {
+            //! why use OR here?
+            //* because we want to search in multiple fields (title, content, tags).
+            OR: [
+              {
+                title: {
+                  contains: payload.search as string,
+                  mode: "insensitive",
+                },
+              },
+              {
+                content: {
+                  contains: payload.search as string,
+                  mode: "insensitive",
+                },
+              },
+              {
+                tags: {
+                  has: payload.search as string,
+                },
+              },
+            ],
+          },
+          {
+            tags: {
+              //! why use hasEvery here?
+              //* because we want to filter posts that contain all the specified tags.
+              hasEvery: [...(payload.tags as string[])],
+            },
+          },
+        ],
+      },
+    });
+    return posts;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
 export const postServices = {
